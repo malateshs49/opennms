@@ -39,13 +39,13 @@ import org.opennms.core.ipc.sink.api.AsyncPolicy;
 import org.opennms.core.ipc.sink.xml.AbstractXmlSinkModule;
 import org.opennms.core.xml.XmlHandler;
 import org.opennms.netmgt.config.api.EventdConfig;
-import org.opennms.netmgt.events.api.Events;
 import org.opennms.netmgt.events.api.EventsWrapper;
 import org.opennms.netmgt.xml.event.Event;
+import org.opennms.netmgt.xml.event.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class EventsModule extends AbstractXmlSinkModule<EventsWrapper, Events> {
+public class EventsModule extends AbstractXmlSinkModule<EventsWrapper, Log> {
 
 	public static final String MODULE_ID = "Events";
 
@@ -60,7 +60,7 @@ public class EventsModule extends AbstractXmlSinkModule<EventsWrapper, Events> {
 	private XmlHandler<Event> eventMarshaler = null;
 
 	public EventsModule(EventdConfig config) {
-		super(Events.class);
+		super(Log.class);
 		this.m_config = config;
 		eventMarshaler = new XmlHandler<Event>(Event.class);
 	}
@@ -76,8 +76,8 @@ public class EventsModule extends AbstractXmlSinkModule<EventsWrapper, Events> {
 	}
 
 	@Override
-	public AggregationPolicy<EventsWrapper, Events, Events> getAggregationPolicy() {
-		return new AggregationPolicy<EventsWrapper, Events, Events>() {
+	public AggregationPolicy<EventsWrapper, Log, Log> getAggregationPolicy() {
+		return new AggregationPolicy<EventsWrapper, Log, Log>() {
 
 			@Override
 			public int getCompletionSize() {
@@ -95,30 +95,30 @@ public class EventsModule extends AbstractXmlSinkModule<EventsWrapper, Events> {
 			}
 
 			@Override
-			public Events aggregate(Events accumulator, EventsWrapper eventsWrapper) {
+			public Log aggregate(Log accumulator, EventsWrapper eventsWrapper) {
 				accumulator = eventsWrapper.getEvents();
 				return accumulator;
 			}
 
 			@Override
-			public Events build(Events accumulator) {
+			public Log build(Log accumulator) {
 				return accumulator;
 			}
 		};
 	}
 
-	@Override
-	public Events unmarshal(byte[] eventBytes) {
-		try {
-			eventString = new String(eventBytes, ENCODING);
-			Events events = new Events();
-			events.setEvent(eventMarshaler.unmarshal(eventString));
-			return events;
-		} catch (UnsupportedEncodingException e) {
-			LOG.error("Failed to marshal onmsevent from kafkaconsumer." + e.getLocalizedMessage());
-		}
-		return null;
-	}
+//	@Override
+//	public Log unmarshal(byte[] eventBytes) {
+//		try {
+//			eventString = new String(eventBytes, ENCODING);
+//			Log events = new Log();
+//			events.setEvent(eventMarshaler.unmarshal(eventString));
+//			return events;
+//		} catch (UnsupportedEncodingException e) {
+//			LOG.error("Failed to marshal onmsevent from kafkaconsumer." + e.getLocalizedMessage());
+//		}
+//		return null;
+//	}
 
 	@Override
 	public AsyncPolicy getAsyncPolicy() {

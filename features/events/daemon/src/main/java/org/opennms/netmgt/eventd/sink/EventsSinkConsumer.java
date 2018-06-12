@@ -40,13 +40,12 @@ import org.opennms.core.logging.Logging;
 import org.opennms.netmgt.config.api.EventdConfig;
 import org.opennms.netmgt.eventd.Eventd;
 import org.opennms.netmgt.events.api.EventForwarder;
-import org.opennms.netmgt.events.api.Events;
 import org.opennms.netmgt.events.api.EventsWrapper;
 import org.opennms.netmgt.xml.event.Event;
 import org.opennms.netmgt.xml.event.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class EventsSinkConsumer implements MessageConsumer<EventsWrapper, Events> {
+public class EventsSinkConsumer implements MessageConsumer<EventsWrapper, Log> {
 
 	@Autowired
     private EventdConfig m_config;
@@ -63,14 +62,13 @@ public class EventsSinkConsumer implements MessageConsumer<EventsWrapper, Events
 	private EventForwarder eventForwarder;
 
 	@Override
-	public SinkModule<EventsWrapper, Events> getModule() {
+	public SinkModule<EventsWrapper, Log> getModule() {
 		return new EventsModule(m_config);
 	}
 
 	@Override
-	public void handleMessage(Events events) {
+	public void handleMessage(Log eventLog) {
 		try (Logging.MDCCloseable mdc = Logging.withPrefixCloseable(Eventd.LOG4J_CATEGORY)) {
-			final Log eventLog = toLog(events.getEvent());
 			eventForwarder.sendNowSync(eventLog);
 		}
 
