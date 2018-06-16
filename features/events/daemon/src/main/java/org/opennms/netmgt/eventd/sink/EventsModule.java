@@ -37,13 +37,15 @@ import org.opennms.core.ipc.sink.api.AggregationPolicy;
 import org.opennms.core.ipc.sink.api.AsyncPolicy;
 import org.opennms.core.ipc.sink.xml.AbstractXmlSinkModule;
 import org.opennms.netmgt.config.api.EventdConfig;
+import org.opennms.netmgt.dao.mock.EventWrapper;
+import org.opennms.netmgt.events.api.EventsWrapper;
 import org.opennms.netmgt.xml.event.Event;
 import org.opennms.netmgt.xml.event.Events;
 import org.opennms.netmgt.xml.event.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class EventsModule extends AbstractXmlSinkModule<Event, Events> {
+public class EventsModule extends AbstractXmlSinkModule<EventsWrapper, Event> {
 
 	public static final String MODULE_ID = "Events";
 
@@ -52,7 +54,7 @@ public class EventsModule extends AbstractXmlSinkModule<Event, Events> {
 	private final EventdConfig m_config;
 
 	public EventsModule(EventdConfig config) {
-		super(Events.class);
+		super(Event.class);
 		this.m_config = config;
 	}
 
@@ -67,8 +69,8 @@ public class EventsModule extends AbstractXmlSinkModule<Event, Events> {
 	}
 
 	@Override
-	public AggregationPolicy<Event, Events,Events> getAggregationPolicy() {
-		return new AggregationPolicy<Event, Events,Events>() {
+	public AggregationPolicy<EventsWrapper, Event,Event> getAggregationPolicy() {
+		return new AggregationPolicy<EventsWrapper, Event,Event>() {
 
 			@Override
 			public int getCompletionSize() {
@@ -81,23 +83,17 @@ public class EventsModule extends AbstractXmlSinkModule<Event, Events> {
 			}
 
 			@Override
-			public Object key(Event message) {
+			public Object key(EventsWrapper message) {
 				return message;
 			}
 
 			@Override
-			public Events aggregate(Events accumulator, Event eventsWrapper) {
-				if (accumulator == null) {
-					accumulator = new Events();
-					accumulator.addEvent(eventsWrapper);
-				} else {
-					accumulator.addEvent(eventsWrapper);
-				}
-				return accumulator;
+			public Event aggregate(Event accumulator, EventsWrapper eventsWrapper) {
+				return eventsWrapper.getEvents();
 			}
 
 			@Override
-			public Events build(Events accumulator) {
+			public Event build(Event accumulator) {
 				return accumulator;
 			}
 		};
