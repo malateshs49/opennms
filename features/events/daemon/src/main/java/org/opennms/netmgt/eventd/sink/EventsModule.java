@@ -37,11 +37,8 @@ import org.opennms.core.ipc.sink.api.AggregationPolicy;
 import org.opennms.core.ipc.sink.api.AsyncPolicy;
 import org.opennms.core.ipc.sink.xml.AbstractXmlSinkModule;
 import org.opennms.netmgt.config.api.EventdConfig;
-import org.opennms.netmgt.dao.mock.EventWrapper;
 import org.opennms.netmgt.events.api.EventsWrapper;
 import org.opennms.netmgt.xml.event.Event;
-import org.opennms.netmgt.xml.event.Events;
-import org.opennms.netmgt.xml.event.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
