@@ -37,12 +37,13 @@ import org.opennms.core.ipc.sink.api.AggregationPolicy;
 import org.opennms.core.ipc.sink.api.AsyncPolicy;
 import org.opennms.core.ipc.sink.xml.AbstractXmlSinkModule;
 import org.opennms.netmgt.config.api.EventdConfig;
-import org.opennms.netmgt.events.api.EventsWrapper;
+import org.opennms.netmgt.xml.event.Event;
+import org.opennms.netmgt.xml.event.Events;
 import org.opennms.netmgt.xml.event.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class EventsModule extends AbstractXmlSinkModule<EventsWrapper, Log> {
+public class EventsModule extends AbstractXmlSinkModule<Event, Events> {
 
 	public static final String MODULE_ID = "Events";
 
@@ -51,7 +52,7 @@ public class EventsModule extends AbstractXmlSinkModule<EventsWrapper, Log> {
 	private final EventdConfig m_config;
 
 	public EventsModule(EventdConfig config) {
-		super(Log.class);
+		super(Events.class);
 		this.m_config = config;
 	}
 
@@ -66,8 +67,8 @@ public class EventsModule extends AbstractXmlSinkModule<EventsWrapper, Log> {
 	}
 
 	@Override
-	public AggregationPolicy<EventsWrapper, Log, Log> getAggregationPolicy() {
-		return new AggregationPolicy<EventsWrapper, Log, Log>() {
+	public AggregationPolicy<Event, Events,Events> getAggregationPolicy() {
+		return new AggregationPolicy<Event, Events,Events>() {
 
 			@Override
 			public int getCompletionSize() {
@@ -80,18 +81,23 @@ public class EventsModule extends AbstractXmlSinkModule<EventsWrapper, Log> {
 			}
 
 			@Override
-			public Object key(EventsWrapper message) {
-				return message.getEvents();
+			public Object key(Event message) {
+				return message;
 			}
 
 			@Override
-			public Log aggregate(Log accumulator, EventsWrapper eventsWrapper) {
-				accumulator = eventsWrapper.getEvents();
+			public Events aggregate(Events accumulator, Event eventsWrapper) {
+				if (accumulator == null) {
+					accumulator = new Events();
+					accumulator.addEvent(eventsWrapper);
+				} else {
+					accumulator.addEvent(eventsWrapper);
+				}
 				return accumulator;
 			}
 
 			@Override
-			public Log build(Log accumulator) {
+			public Events build(Events accumulator) {
 				return accumulator;
 			}
 		};

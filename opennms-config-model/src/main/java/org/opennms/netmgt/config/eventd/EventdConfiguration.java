@@ -133,21 +133,21 @@ public class EventdConfiguration implements Serializable {
      * Number of threads used for consuming/dispatching messages.
      * Defaults to 2 x the number of available processors.
      */
-    @XmlAttribute(name = "threads", required=false)
-    private int m_threads;
+    @XmlAttribute(name = "sink-threads", required=false)
+    private int m_threads=0;
     
     /**
      * Maximum number of messages to keep in memory while waiting
      to be dispatched.
      */
-	@XmlAttribute(name="queue-size", required=false)
+	@XmlAttribute(name="sink-queue-size", required=false)
     private int m_queueSize = 10000;
 
     /**
      * Messages are aggregated in batches before being dispatched.
      * When the batch reaches this size, it will be dispatched.
      */
-	@XmlAttribute(name="batch-size", required=false)
+	@XmlAttribute(name="sink-batch-size", required=false)
     private int m_batchSize = 1000;
 
     /**
@@ -155,7 +155,7 @@ public class EventdConfiguration implements Serializable {
      * When the batch has been created for longer than this interval (ms)
      * it will be dispatched, regardless of the current size.
      */
-	@XmlAttribute(name="batch-interval", required=false)
+	@XmlAttribute(name="sink-batch-interval", required=false)
     private int m_batchInterval = 500;
 
     public EventdConfiguration() {
@@ -193,12 +193,12 @@ public class EventdConfiguration implements Serializable {
         m_udpPort = ConfigUtils.assertNotNull(UDPPort, "UDPPort");
     }
     
-    public Optional<Integer> getNumThreads() {
-    	return Optional.ofNullable(m_threads);
+    public Integer getNumThreads() {
+    	return m_threads;
     }
 
     public void setNumThreads(final Integer numThreads) {
-        m_threads = ConfigUtils.assertNotNull(numThreads, "threads");
+        m_threads = numThreads;
     }
 
     public Integer getReceivers() {
