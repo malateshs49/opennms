@@ -1,8 +1,8 @@
 /*******************************************************************************
  * This file is part of OpenNMS(R).
  *
- * Copyright (C) 2002-2014 The OpenNMS Group, Inc.
- * OpenNMS(R) is Copyright (C) 1999-2014 The OpenNMS Group, Inc.
+ * Copyright (C) 2017 The OpenNMS Group, Inc.
+ * OpenNMS(R) is Copyright (C) 1999-2017 The OpenNMS Group, Inc.
  *
  * OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.
  *
@@ -40,47 +40,36 @@ import org.opennms.core.logging.Logging;
 import org.opennms.netmgt.config.api.EventdConfig;
 import org.opennms.netmgt.eventd.Eventd;
 import org.opennms.netmgt.events.api.EventForwarder;
-import org.opennms.netmgt.events.api.Events;
-import org.opennms.netmgt.events.api.EventsWrapper;
 import org.opennms.netmgt.xml.event.Event;
 import org.opennms.netmgt.xml.event.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class EventsSinkConsumer implements MessageConsumer<EventsWrapper, Events> {
+public class EventsSinkConsumer implements MessageConsumer<Event, Log> {
 
-	@Autowired
+    @Autowired
     private EventdConfig m_config;
-	
-	@PostConstruct
-	public void init() throws Exception {
-		messageConsumerManager.registerConsumer(this);
-	}
 
-	@Autowired
-	private MessageConsumerManager messageConsumerManager;
+    @PostConstruct
+    public void init() throws Exception {
+        messageConsumerManager.registerConsumer(this);
+    }
 
-	@Autowired
-	private EventForwarder eventForwarder;
+    @Autowired
+    private MessageConsumerManager messageConsumerManager;
 
-	@Override
-	public SinkModule<EventsWrapper, Events> getModule() {
-		return new EventsModule(m_config);
-	}
+    @Autowired
+    private EventForwarder eventForwarder;
 
-	@Override
-	public void handleMessage(Events events) {
-		try (Logging.MDCCloseable mdc = Logging.withPrefixCloseable(Eventd.LOG4J_CATEGORY)) {
-			final Log eventLog = toLog(events.getEvent());
-			eventForwarder.sendNowSync(eventLog);
-		}
+    @Override
+    public SinkModule<Event, Log> getModule() {
+        return new EventsModule(m_config);
+    }
 
-	}
+    @Override
+    public void handleMessage(Log eventLog) {
+        try (Logging.MDCCloseable mdc = Logging.withPrefixCloseable(Eventd.LOG4J_CATEGORY)) {
+            eventForwarder.sendNowSync(eventLog);
+        }
 
-	private Log toLog(Event event) {
-		final Log log = new Log();
-		final org.opennms.netmgt.xml.event.Events events = new org.opennms.netmgt.xml.event.Events();
-		events.addEvent(event);
-		log.setEvents(events);
-		return log;
-	}
+    }
 }

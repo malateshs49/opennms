@@ -56,6 +56,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.opennms.core.ipc.sink.api.Message;
 import org.opennms.core.network.InetAddressXmlAdapter;
 import org.opennms.core.utils.StringUtils;
 import org.opennms.netmgt.events.api.DateTimeAdapter;
@@ -63,8 +64,8 @@ import org.opennms.netmgt.events.api.DateTimeAdapter;
 @XmlRootElement(name = "event")
 @XmlAccessorType(XmlAccessType.FIELD)
 //@ValidateUsing("event.xsd")
-public class Event implements Serializable {
-        private static final long serialVersionUID = 6997816158234653400L;
+public class Event implements Message,Serializable {
+        private static final long serialVersionUID = 6997817689084653400L;
 
 	@XmlAttribute(name = "uuid")
 	private String _uuid;
@@ -1883,8 +1884,7 @@ public class Event implements Serializable {
 		if (_dbid   != null) builder.append("dbid", _dbid);
 		if (_source != null) builder.append("source", _source);
 		if (_nodeid != null) builder.append("nodeid", _nodeid);
-		// Copy the _parms array instead of referencing it, to avoid Concurrent Modification Exceptions
-		if (_parms  != null) builder.append("parms",  new ArrayList<>(_parms));
+		if (_parms  != null) builder.append("parms", _parms);
 		return builder.toString();
 	}
 
