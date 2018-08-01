@@ -95,6 +95,10 @@
     <bean id="ipNetToMediaDao" class="org.opennms.netmgt.dao.hibernate.IpNetToMediaDaoHibernate">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
+
+  <bean id="ipInterfaceDao" class="org.opennms.netmgt.dao.hibernate.IpInterfaceDaoHibernate">
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
   
   <bean id="bridgeMacLinkDao" class="org.opennms.netmgt.dao.hibernate.BridgeMacLinkDaoHibernate">
     <property name="sessionFactory" ref="sessionFactory" />
@@ -115,6 +119,7 @@
   <bean id="bridgeTopologyDao" class="org.opennms.netmgt.dao.hibernate.BridgeTopologyDaoHibernate">
     <property name="bridgeBridgeLinkDao" ref="bridgeBridgeLinkDao" />
     <property name="bridgeMacLinkDao" ref="bridgeMacLinkDao" />
+    <property name="bridgeElementDao" ref="bridgeElementDao" />
     <property name="nodeDao" ref="nodeDao" />
   </bean>
 

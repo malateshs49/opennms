@@ -662,6 +662,12 @@
       <bundle>mvn:org.opennms.core.ipc.rpc/org.opennms.core.ipc.rpc.aws-sqs-impl/${project.version}</bundle>
     </feature>
 
+    <feature name="opennms-core-ipc-rpc-kafka" description="OpenNMS :: Core :: IPC :: RPC :: Kafka Impl." version="${project.version}">
+      <feature>opennms-kafka</feature>
+      <feature>opennms-core-ipc-rpc-api</feature>
+      <bundle>mvn:org.opennms.core.ipc.rpc/org.opennms.core.ipc.rpc.kafka/${project.version}</bundle>
+    </feature>
+
     <feature name="opennms-core-ipc-rpc-commands" description="OpenNMS :: Core :: IPC :: RPC :: Shell Commands" version="${project.version}">
       <feature>dropwizard-metrics</feature>
       <feature>guava</feature>
@@ -710,6 +716,7 @@
       <feature>opennms-core</feature>
       <!-- TODO: This is a weak dependency inside EventConstants that needs to be removed -->
       <feature>opennms-snmp</feature>
+      <feature>opennms-core-ipc-sink-api</feature>
 
       <bundle>mvn:org.opennms.features.events/org.opennms.features.events.api/${project.version}</bundle>
     </feature>

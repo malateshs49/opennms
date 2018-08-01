@@ -43,8 +43,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.opennms.core.ipc.sink.api.Message;
-
 /**
  * Class Events.
  * 
@@ -54,7 +52,7 @@ import org.opennms.core.ipc.sink.api.Message;
 @XmlRootElement(name="events")
 @XmlAccessorType(XmlAccessType.FIELD)
 // @ValidateUsing("event.xsd")
-public class Events implements Serializable,Message {
+public class Events implements Serializable {
 	private static final long serialVersionUID = -6993861737101274987L;
 
       //--------------------------/

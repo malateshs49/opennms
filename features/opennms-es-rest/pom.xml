@@ -92,7 +92,7 @@
           <!-- The elasticsearch plugin is by default bound to the -->
           <!-- pre-integration-test and post-integration-test phases -->
           <!-- here we are binding into the normal unit test phases -->
-        <!--   <execution>
+         <!--  <execution>
             <id>start-elasticsearch</id>
             <phase>pre-integration-test</phase>
             <phase>test-compile</phase>
