@@ -19,5 +19,9 @@
     <bean id="kafkaLocalMessageDispatcherFactory" class="org.opennms.core.ipc.sink.kafka.client.KafkaLocalMessageDispatcherFactory" />
   
 	<bean id="kafkaOffsetProvider" class="org.opennms.core.ipc.sink.kafka.server.offset.KafkaOffsetProvider"/>
+	
+  <bean id="eventdConfigManager" class="org.opennms.netmgt.config.EventdConfigManager"/>
+  
+  <onmsgi:service interface="org.opennms.netmgt.config.api.EventdConfig" ref="eventdConfigManager" />
 
 </beans>
